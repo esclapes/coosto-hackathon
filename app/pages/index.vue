@@ -3,7 +3,7 @@
 
     <gmap-map
       :center="center"
-      :zoom="10"
+      :zoom="12"
       style="width: 100%; height: 500px"
       v-if="shouldRender"
     >
@@ -11,9 +11,12 @@
         :options="infoOptions"
         :position="infoWindowPos"
         :opened="infoWinOpen"
-        :content="infoContent"
         @closeclick="infoWinOpen=false"
-      ></gmap-info-window>
+      >
+        <router-link :to="infoContent.href">
+          {{ infoContent.label }}
+        </router-link>
+      </gmap-info-window>
 
       <gmap-marker
         v-for="(m, index) in places"
@@ -34,7 +37,10 @@ import gql from 'graphql-tag'
 export default {
   data () {
     const mapDefaults = {
-      infoContent: '',
+      infoContent: {
+        label: '',
+        href: ''
+      },
       infoWindowPos: {
         lat: 0,
         lng: 0
@@ -57,8 +63,8 @@ export default {
       }`
     }).then(({ data }) => {
       return Object.assign({}, {
-        shouldRender: false,
-        ...mapDefaults
+        ...mapDefaults,
+        shouldRender: false
       }, {
         // records: res.data.records,
         center: { lat: 51.4416, lng: 5.4697 },
@@ -70,7 +76,9 @@ export default {
   methods: {
     toggleInfoWindow: function (marker, idx) {
       this.infoWindowPos = marker.location
-      this.infoContent = marker.name
+      this.infoContent.label = marker.name
+      this.infoContent.href = `location/${marker.id}`
+
       // check if its the same marker that was selected if yes toggle
       if (this.currentMidx === idx) {
         this.infoWinOpen = !this.infoWinOpen
