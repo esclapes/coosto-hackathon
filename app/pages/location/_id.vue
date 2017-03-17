@@ -4,6 +4,11 @@
     <p>Type: {{ dogPlace.terrain }}</p>
 
     <div class="block">
+      <div class="filters">
+        <input type="text" v-model="nearbyType" placeholder="Nearby places">
+        <button v-on:click="updateMap">Search</button>
+      </div>
+
       <gmap-map
         :center="dogPlace.location"
         :zoom="16"
@@ -17,9 +22,7 @@
           :opened="infoWinOpen"
           @closeclick="infoWinOpen=false"
         >
-          <router-link :to="{ name: 'location-id', params: { id: infoWindowLocation.id }}">
-            {{ infoWindowLocation.name }}
-          </router-link>
+          {{ infoWindowLocation.name }}
         </gmap-info-window>
 
         <gmap-marker
@@ -39,9 +42,9 @@
       </gmap-map>
     </div>
 
-    <div class="block images">
-      <div class="block-nested">
-        <img :src="dogPlace.image" :alt="dogPlace.name">
+    <div class="block">
+      <div class="block-nested image-container">
+        <img class="image" :src="dogPlace.image" :alt="dogPlace.name">
       </div>
       <div class="block-nested">
         <gmap-street-view-panorama
@@ -83,7 +86,7 @@ export default {
 
     return apollo.query({
       query: gql`{
-        dogPlaces(id:"${params.id}") {
+        dogPlace(id:"${params.id}") {
           id,
           name,
           location {
@@ -101,9 +104,10 @@ export default {
     .then(({ data }) => {
       return Object.assign({}, {
         ...mapDefaults,
+        nearbyType: '',
         shouldRender: false
       }, {
-        dogPlace: data.dogPlaces[0]
+        dogPlace: data.dogPlace
       })
     })
     .catch(error => {
@@ -137,6 +141,30 @@ export default {
         this.infoWinOpen = true
         this.currentMidx = idx
       }
+    },
+
+    updateMap () {
+      const nearbyType = this.nearbyType
+      return apollo.query({
+        query: gql`{
+          dogPlace(id:"${this.$route.params.id}") {
+            id,
+            name,
+            location {
+              lat, lng
+            },
+            terrain,
+            image,
+            nearby(type:"${nearbyType}") {
+              id, name, icon, location {
+                lat, lng
+              }
+            }
+          }
+        }`})
+      .then(({ data }) => {
+        this.dogPlace = data.dogPlace
+      })
     }
   },
 
@@ -168,5 +196,28 @@ h1 {
   width: 50%;
   height: 300px;
   overflow: hidden;
+}
+
+.filters {
+  padding: 20px;
+  text-align: center;
+}
+
+.filters * {
+  font-size: 16px;
+  border: solid 1px #999;
+}
+
+
+.filters input {
+  width: 300px;
+  padding: 4px;
+}
+
+.filters button {
+  padding: 4px 12px;
+  margin-left: -1px;
+  color: #fff;
+  background: #999;
 }
 </style>
