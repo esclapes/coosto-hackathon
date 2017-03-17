@@ -45,7 +45,6 @@ module.exports = {
   ** Plugins
   */
   plugins: [
-    '~plugins/maps',
-    '~plugins/apollo'
+    '~plugins/maps'
   ]
 }

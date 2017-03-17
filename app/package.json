@@ -7,8 +7,7 @@
   "dependencies": {
     "apollo-client": "^0.5.26",
     "axios": "^0.15.3",
-    "nuxt": "latest",
-    "vue-apollo": "^1.4.1"
+    "nuxt": "latest"
   },
   "scripts": {
     "dev": "nuxt",
