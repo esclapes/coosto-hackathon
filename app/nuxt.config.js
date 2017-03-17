@@ -25,6 +25,8 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    vendor: ['vue2-google-maps'],
+
     /*
     ** Run ESLINT on save
     */
