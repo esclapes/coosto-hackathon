@@ -68,13 +68,11 @@ export default {
         center: { lat: 51.4416, lng: 5.4697 },
         places: data.dogPlaces
       })
-    })
+    }).catch(error => console.log('index.vue', error))
   },
 
-  computed: {
-    renderPanorama () {
-      return this.infoWindowPos && this.infoWindowPos.lat && this.infoWindowPos.lng
-    }
+  fetch ({ store }) {
+    return store.dispatch('getLocations')
   },
 
   methods: {
