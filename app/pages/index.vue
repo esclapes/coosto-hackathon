@@ -8,13 +8,14 @@
       v-if="shouldRender"
     >
       <gmap-info-window
+        v-if="infoWindowLocation"
         :options="infoOptions"
         :position="infoWindowPos"
         :opened="infoWinOpen"
         @closeclick="infoWinOpen=false"
       >
-        <router-link :to="infoContent.href">
-          {{ infoContent.label }}
+        <router-link :to="{ name: 'location-id', params: { id: infoWindowLocation.id }}">
+          {{ infoWindowLocation.name }}
         </router-link>
       </gmap-info-window>
 
@@ -37,10 +38,7 @@ import gql from 'graphql-tag'
 export default {
   data () {
     const mapDefaults = {
-      infoContent: {
-        label: '',
-        href: ''
-      },
+      infoWindowLocation: {},
       infoWindowPos: {
         lat: 0,
         lng: 0
@@ -76,9 +74,7 @@ export default {
   methods: {
     toggleInfoWindow: function (marker, idx) {
       this.infoWindowPos = marker.location
-      this.infoContent.label = marker.name
-      this.infoContent.href = `location/${marker.id}`
-
+      this.infoWindowLocation = marker
       // check if its the same marker that was selected if yes toggle
       if (this.currentMidx === idx) {
         this.infoWinOpen = !this.infoWinOpen
