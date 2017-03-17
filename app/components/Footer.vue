@@ -1,5 +1,5 @@
 <template>
   <footer>
-    Visit our website for more documentation : <a href="https://nuxtjs.org" target="_blank">nuxtjs.org</a>
+    &copy;{{ new Date().getFullYear() }} - A <a href="https://www.coosto.com" target="_blank">Coosto</a> hackathon project. 
   </footer>
 </template>

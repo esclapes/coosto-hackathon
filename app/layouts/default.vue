@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div class="container">
+    <div class="header">
+      <router-link to="/">DogPlace</router-link>
+    </div>
     <nuxt/>
     <my-footer/>
   </div>
@@ -18,35 +21,10 @@ export default {
 <style>
 .container
 {
-  margin: 0;
+  margin: 0 auto;
   width: 100%;
-  padding: 100px 0;
-  text-align: center;
+  max-width: 1200px;
+  padding: 40px 0;
 }
 
-.button, .button:visited
-{
-  display: inline-block;
-  color: #3B8070;
-  letter-spacing: 1px;
-  background-color: #fff;
-  border: 2px solid #3B8070;
-  text-decoration: none;
-  text-transform: uppercase;
-  padding: 15px 45px;
-}
-
-.button:hover, .button:focus
-{
-  color: #fff;
-  background-color: #3B8070;
-}
-
-.title
-{
-  color: #505153;
-  font-weight: 300;
-  font-size: 2.5em;
-  margin: 0;
-}
 </style>

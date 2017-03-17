@@ -2,15 +2,14 @@ html, body
 {
   background-color: #fff;
   color: #2e2f30;
-  letter-spacing: 0.5px;
   font-family: "Source Sans Pro", Arial, sans-serif;
-  height: 100vh;
   margin: 0;
 }
 
 footer
 {
-  padding: 20px;
+  margin-top: 2em;
+  padding: 2em;
   text-align: center;
   border-top: 1px solid #ddd;
 }
@@ -20,9 +19,8 @@ a, a:hover, a:focus, a:visited
   color: #41B883;
 }
 
-.logo {
-  width: 243px;
-  height: 218px;
+img {
+  max-width: 100%;
 }
 
 .page-enter-active, .page-leave-active
