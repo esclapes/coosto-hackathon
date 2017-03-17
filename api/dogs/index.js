@@ -2,6 +2,12 @@ const DogsAPI = require('./model.js')
 const { unwrapData } = require('../util.js')
 
 const schema = [`
+  enum Terrain {
+    openField
+    forest
+    mixed
+  }
+
   type Location {
     lat: Float!
     lng: Float!
@@ -17,7 +23,7 @@ const schema = [`
   }
 
   type Query {
-    dogPlaces: [DogPlace]
+    dogPlaces(terrain: Terrain): [DogPlace]
   }
 
   schema {
@@ -25,14 +31,24 @@ const schema = [`
   }
 `]
 
+const terrainMap = {
+  openField: 'open veld',
+  forest: 'bosrijk',
+  mixed: 'gemengde beplanting'
+}
+
 const resolvers = {
   Query: {
     dogPlaces(obj, args, context) {
-      // console.log(obj)
-      // console.log(args)
-      // console.log(context)
+      console.log(args)
+      const params = {}
 
-      return DogsAPI.get()
+      if (args.terrain) {
+        const terrain = terrainMap[args.terrain]
+        params['refine.soort_terr'] = terrain
+      }
+
+      return DogsAPI.get(params)
         .then(data => {
           return unwrapData(data).map(obj => ({
             id: obj.id,
