@@ -50,26 +50,29 @@ if (process.BROWSER_BUILD) {
 
 export default {
   data () {
+    const data = {
+      shouldRender: false,
+
+      infoContent: '',
+      infoWindowPos: {
+        lat: 0,
+        lng: 0
+      },
+      infoWinOpen: false,
+      currentMidx: null,
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35
+        }
+      }
+    }
+
     const api = 'https://data.eindhoven.nl/api/records/1.0/search/?dataset=hondenlosloopterreinen&facet=locatie&facet=soort_terr'
     return axios.get(api)
       .then((res) => {
         return {
-          shouldRender: false,
-
-          infoContent: '',
-          infoWindowPos: {
-            lat: 0,
-            lng: 0
-          },
-          infoWinOpen: false,
-          currentMidx: null,
-          infoOptions: {
-            pixelOffset: {
-              width: 0,
-              height: -35
-            }
-          },
-
+          ...data,
           records: res.data.records,
           center: { lat: 51.4416, lng: 5.4697 },
           markers: res.data.records.map(record => {
