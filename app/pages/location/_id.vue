@@ -20,35 +20,27 @@
 </template>
 
 <script>
-import axios from 'axios'
+import apollo from '../../lib/apollo'
+import gql from 'graphql-tag'
 
 export default {
   data ({ params }) {
-    const api = 'https://data.eindhoven.nl/api/records/1.0/search/?dataset=hondenlosloopterreinen&facet=locatie&facet=soort_terr&rows=999'
-    return axios.get(api)
-      .then((res) => {
-        const record = res.data.records.find(record => {
-          return record.recordid === params.id
-        })
-
-        return {
-          dogPlace: {
-            id: record.recordid,
-            name: record.fields.locatie,
-            location: {
-              lat: record.fields.locatie2[0],
-              lng: record.fields.locatie2[1]
-            },
-            image: record.fields.afbeelding,
-            terrain: record.fields.soort_terr
-          }
+    return apollo.query({
+      query: gql`{
+        dogPlaces(id:"${params.id}") {
+          id, name, location { lat, lng }, terrain, image
         }
-      })
-      .catch(error => {
-        console.warn(error)
-      })
+      }`})
+    .then(({ data }) => {
+      console.log(data)
+      return {
+        dogPlace: data.dogPlaces[0]
+      }
+    })
+    .catch(error => {
+      console.warn(error)
+    })
   },
-
   methods: {
     updatePov (pov) {
       this.pov = pov
