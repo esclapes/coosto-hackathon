@@ -1,14 +1,6 @@
 <template>
   <section class="container">
 
-    <ul>
-      <li v-for="record in records">
-        <nuxt-link :to="`location/${record.recordid}`">
-          {{ record.fields.locatie }}
-        </nuxt-link>
-      </li>
-    </ul>
-
     <gmap-map
       :center="center"
       :zoom="10"
@@ -24,8 +16,8 @@
       ></gmap-info-window>
 
       <gmap-marker
-        v-for="(m, index) in markers"
-        :position="m.position"
+        v-for="(m, index) in places"
+        :position="m.location"
         :draggable="true"
         :clickable="true"
         @click="toggleInfoWindow(m, index)"
@@ -36,59 +28,49 @@
 </template>
 
 <script>
-import axios from 'axios'
-import * as VueGoogleMaps from 'vue2-google-maps'
-import Vue from 'vue'
-
-if (process.BROWSER_BUILD) {
-  Vue.use(VueGoogleMaps, {
-    load: {
-      key: 'AIzaSyCEmC4e_FLzLcbomTMHBG7Xr65euFTwepc'
-    }
-  })
-}
+import apollo from '../lib/apollo'
+import gql from 'graphql-tag'
 
 export default {
   data () {
-    const api = 'https://data.eindhoven.nl/api/records/1.0/search/?dataset=hondenlosloopterreinen&facet=locatie&facet=soort_terr'
-    return axios.get(api)
-      .then((res) => {
-        return {
-          shouldRender: false,
-
-          infoContent: '',
-          infoWindowPos: {
-            lat: 0,
-            lng: 0
-          },
-          infoWinOpen: false,
-          currentMidx: null,
-          infoOptions: {
-            pixelOffset: {
-              width: 0,
-              height: -35
-            }
-          },
-
-          records: res.data.records,
-          center: { lat: 51.4416, lng: 5.4697 },
-          markers: res.data.records.map(record => {
-            return {
-              infoText: record.fields.locatie,
-              position: {
-                lng: record.fields.locatie2[1],
-                lat: record.fields.locatie2[0]
-              }
-            }
-          })
+    const mapDefaults = {
+      infoContent: '',
+      infoWindowPos: {
+        lat: 0,
+        lng: 0
+      },
+      infoWinOpen: false,
+      currentMidx: null,
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35
         }
+      }
+    }
+
+    return apollo.query({
+      query: gql`{
+        dogPlaces {
+          id, name, location { lat, lng }
+        }
+      }`
+    }).then(({ data }) => {
+      return Object.assign({}, {
+        shouldRender: false,
+        ...mapDefaults
+      }, {
+        // records: res.data.records,
+        center: { lat: 51.4416, lng: 5.4697 },
+        places: data.dogPlaces
       })
+    })
   },
 
   methods: {
     toggleInfoWindow: function (marker, idx) {
-      this.infoWindowPos = marker.position
-      this.infoContent = marker.infoText
+      this.infoWindowPos = marker.location
+      this.infoContent = marker.name
       // check if its the same marker that was selected if yes toggle
       if (this.currentMidx === idx) {
         this.infoWinOpen = !this.infoWinOpen
