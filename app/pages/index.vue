@@ -71,6 +71,12 @@ export default {
     })
   },
 
+  computed: {
+    renderPanorama () {
+      return this.infoWindowPos && this.infoWindowPos.lat && this.infoWindowPos.lng
+    }
+  },
+
   methods: {
     toggleInfoWindow: function (marker, idx) {
       this.infoWindowPos = marker.location
@@ -94,8 +100,7 @@ export default {
 
 
 <style scoped>
-.title
-{
+.title {
   margin: 50px 0;
 }
 </style>
