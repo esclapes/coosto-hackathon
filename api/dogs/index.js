@@ -13,6 +13,10 @@ const schema = [`
     lng: Float!
   }
 
+  type Test {
+    id: Int
+  }
+
   # Dog places where your dog can poop
   type DogPlace {
     id: String!
@@ -20,10 +24,11 @@ const schema = [`
     terrain: String
     image: String
     location: Location
+    tests: [Test]
   }
 
   type Query {
-    dogPlaces(terrain: Terrain): [DogPlace]
+    dogPlaces(id: String, terrain: Terrain): [DogPlace]
   }
 
   schema {
@@ -50,7 +55,7 @@ const resolvers = {
 
       return DogsAPI.get(params)
         .then(data => {
-          return unwrapData(data).map(obj => ({
+          let returnData = unwrapData(data).map(obj => ({
             id: obj.id,
             name: obj.locatie,
             image: obj.afbeelding,
@@ -60,8 +65,21 @@ const resolvers = {
               lng: obj.locatie2[1]
             }
           }))
-        })
 
+          if (args.id) {
+            returnData = returnData.filter(obj => obj.id === args.id)
+          }
+
+          return returnData
+        })
+    }
+  },
+  DogPlace: {
+    tests(obj, args, context) {
+      console.log(obj)
+      console.log(args)
+      console.log(context)
+      return [{id: 0}, {id: 1}]
     }
   }
 }
