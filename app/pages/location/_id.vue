@@ -1,11 +1,11 @@
 <template>
   <article>
     <h1>{{ dogPlace.name }}</h1>
-    <small>Id: {{ dogPlace.id }} | Location {{ dogPlace.location.lat }}, {{ dogPlace.location.lng }}</small>
-
+    <small class="location-id">Id: {{ dogPlace.id }}</small>
     <div>
+      <p>Location {{ dogPlace.location.lat }}, {{ dogPlace.location.lng }}</p>
       <p>Type: {{ dogPlace.terrain }}</p>
-      <img :src="dogPlace.image" alt="">
+      <img :src="dogPlace.image" :alt="dogPlace.name">
     </div>
   </article>
 </template>
@@ -43,4 +43,10 @@ export default {
 </script>
 
 <style lang="css">
+h1 {
+  margin-bottom: 0.1em;
+}
+.location-id {
+  margin-bottom: 2em;
+}
 </style>
