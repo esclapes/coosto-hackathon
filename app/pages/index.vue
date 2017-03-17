@@ -32,12 +32,13 @@
 </template>
 
 <script>
-import apollo from '../lib/apollo'
-import gql from 'graphql-tag'
+import { mapState } from 'vuex'
 
 export default {
   data () {
     const mapDefaults = {
+      center: { lat: 51.4416, lng: 5.4697 },
+      shouldRender: false,
       infoWindowLocation: {},
       infoWindowPos: {
         lat: 0,
@@ -53,26 +54,21 @@ export default {
       }
     }
 
-    return apollo.query({
-      query: gql`{
-        dogPlaces {
-          id, name, location { lat, lng }
-        }
-      }`
-    }).then(({ data }) => {
-      return Object.assign({}, {
-        ...mapDefaults,
-        shouldRender: false
-      }, {
-        // records: res.data.records,
-        center: { lat: 51.4416, lng: 5.4697 },
-        places: data.dogPlaces
-      })
-    }).catch(error => console.log('index.vue', error))
+    return {
+      ...mapDefaults
+    }
+  },
+
+  computed: {
+    ...mapState({
+      places: state => state.locations
+    })
   },
 
   fetch ({ store }) {
-    return store.dispatch('getLocations')
+    if (!store.mainLoadDone) {
+      return store.dispatch('getLocations')
+    }
   },
 
   methods: {
