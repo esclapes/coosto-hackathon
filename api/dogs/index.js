@@ -1,30 +1,23 @@
-
+const DogsAPI = require('./model.js')
+const { unwrapData } = require('../util.js')
 
 const schema = [`
-  # Dog dogPlaces where your dog can poop
-  type DogPlace {
-    id: String!
-
-    # The name of the user, e.g. apollostack
-    street: String!
-
-    # Type of terrain
-    type: DogPlaceType
-
-    # The URL to a directly embeddable image for this user's avatar
-    location: [Float]
+  type Location {
+    lat: Float!
+    lng: Float!
   }
 
-  enum DogPlaceType {
-    grass
-    sand
+  # Dog places where your dog can poop
+  type DogPlace {
+    id: String!
+    name: String
+    terrain: String
+    image: String
+    location: Location
   }
 
   type Query {
-    dogPlaces(
-      # Type of terrain
-      type: DogPlaceType
-    ): [DogPlace]
+    dogPlaces: [DogPlace]
   }
 
   schema {
@@ -34,13 +27,25 @@ const schema = [`
 
 const resolvers = {
   Query: {
-    dogPlaces(root, { type }, context) {
-      const fakeData = [
-        { id: 'pepe', stree: 'pepe street', location: [12.21, 343.1] },
-        { id: 'paco', stree: 'paco street', location: [56.51, 67.1] },
-      ]
+    dogPlaces(obj, args, context) {
+      // console.log(obj)
+      // console.log(args)
+      // console.log(context)
 
-      return fakeData;
+      return DogsAPI.get()
+        .then(data => {
+          return unwrapData(data).map(obj => ({
+            id: obj.id,
+            name: obj.locatie,
+            image: obj.afbeelding,
+            terrain: obj.soort_terr,
+            location: {
+              lat: obj.locatie2[0],
+              lng: obj.locatie2[1]
+            }
+          }))
+        })
+
     }
   }
 }

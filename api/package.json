@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "axios": "^0.15.3",
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
     "graphql": "^0.9.1",
