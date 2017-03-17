@@ -1,4 +1,5 @@
 const DogsAPI = require('./model.js')
+const PlacesAPI = require('../places/model.js')
 const { unwrapData } = require('../util.js')
 
 const schema = [`
@@ -13,8 +14,12 @@ const schema = [`
     lng: Float!
   }
 
-  type Test {
-    id: Int
+  type Place {
+    id: String
+    name: String
+    location: Location
+    icon: String
+    types: [String]
   }
 
   # Dog places where your dog can poop
@@ -24,7 +29,7 @@ const schema = [`
     terrain: String
     image: String
     location: Location
-    tests: [Test]
+    nearby: [Place]
   }
 
   type Query {
@@ -75,11 +80,9 @@ const resolvers = {
     }
   },
   DogPlace: {
-    tests(obj, args, context) {
-      console.log(obj)
-      console.log(args)
-      console.log(context)
-      return [{id: 0}, {id: 1}]
+    nearby(obj, args, context) {
+      let {lat, lng} = obj.location
+      return PlacesAPI.get({ location: `${lat},${lng}` })
     }
   }
 }
