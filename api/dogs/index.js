@@ -29,7 +29,7 @@ const schema = [`
     terrain: String
     image: String
     location: Location
-    nearby: [Place]
+    nearby(type: String): [Place]
   }
 
   type Query {
@@ -72,7 +72,7 @@ const resolvers = {
   DogPlace: {
     nearby(obj, args, context) {
       const {lat, lng} = obj.location
-      const keyword = args.nearby
+      const keyword = args.type
       return PlacesAPI.get({ location: `${lat},${lng}`, keyword })
     }
   }
