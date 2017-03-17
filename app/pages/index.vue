@@ -33,6 +33,22 @@ import gql from 'graphql-tag'
 
 export default {
   data () {
+    const mapDefaults = {
+      infoContent: '',
+      infoWindowPos: {
+        lat: 0,
+        lng: 0
+      },
+      infoWinOpen: false,
+      currentMidx: null,
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35
+        }
+      }
+    }
+
     return apollo.query({
       query: gql`{
         dogPlaces {
@@ -42,20 +58,7 @@ export default {
     }).then(({ data }) => {
       return Object.assign({}, {
         shouldRender: false,
-
-        infoContent: '',
-        infoWindowPos: {
-          lat: 0,
-          lng: 0
-        },
-        infoWinOpen: false,
-        currentMidx: null,
-        infoOptions: {
-          pixelOffset: {
-            width: 0,
-            height: -35
-          }
-        }
+        ...mapDefaults
       }, {
         // records: res.data.records,
         center: { lat: 51.4416, lng: 5.4697 },
