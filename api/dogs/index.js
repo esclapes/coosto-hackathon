@@ -1,6 +1,6 @@
 const DogsAPI = require('./model.js')
 const PlacesAPI = require('../places/model.js')
-const { unwrapData } = require('../util.js')
+const { parseQueryResult } = require('../util.js')
 
 const schema = [`
   enum Terrain {
@@ -33,7 +33,8 @@ const schema = [`
   }
 
   type Query {
-    dogPlaces(id: String, terrain: Terrain): [DogPlace]
+    dogPlaces(terrain: Terrain): [DogPlace]
+    dogPlace(id: String, nearby: String): DogPlace
   }
 
   schema {
@@ -50,7 +51,6 @@ const terrainMap = {
 const resolvers = {
   Query: {
     dogPlaces(obj, args, context) {
-      console.log(args)
       const params = {}
 
       if (args.terrain) {
@@ -59,30 +59,21 @@ const resolvers = {
       }
 
       return DogsAPI.get(params)
-        .then(data => {
-          let returnData = unwrapData(data).map(obj => ({
-            id: obj.id,
-            name: obj.locatie,
-            image: obj.afbeelding,
-            terrain: obj.soort_terr,
-            location: {
-              lat: obj.locatie2[0],
-              lng: obj.locatie2[1]
-            }
-          }))
-
-          if (args.id) {
-            returnData = returnData.filter(obj => obj.id === args.id)
-          }
-
-          return returnData
+        .then(parseQueryResult)
+    },
+    dogPlace(obj, args) {
+      return DogsAPI.get()
+        .then(raw => {
+          let data = parseQueryResult(raw).filter(obj => obj.id === args.id)
+          return data[0]
         })
     }
   },
   DogPlace: {
     nearby(obj, args, context) {
-      let {lat, lng} = obj.location
-      return PlacesAPI.get({ location: `${lat},${lng}` })
+      const {lat, lng} = obj.location
+      const keyword = args.nearby
+      return PlacesAPI.get({ location: `${lat},${lng}`, keyword })
     }
   }
 }

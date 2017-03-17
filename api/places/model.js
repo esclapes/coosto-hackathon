@@ -5,8 +5,7 @@ class PlacesAPI {
     this.url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
     this.baseParams = {
       key: 'AIzaSyCEmC4e_FLzLcbomTMHBG7Xr65euFTwepc',
-      rankby: 'distance',
-      keyword: 'bar'
+      rankby: 'distance'
     }
   }
 
@@ -15,9 +14,7 @@ class PlacesAPI {
     return axios.get(this.url, {
       params
     }).then(raw => {
-      let data = raw.data.results
-      console.log(data)
-      return data.map(place => ({
+      return raw.data.results.map(place => ({
         id: place.place_id,
         name: place.name,
         location: place.geometry.location,
