@@ -1,7 +1,7 @@
 <template>
   <article>
     <h1>{{ dogPlace.name }}</h1>
-    <small>Id: {{ dogPlace.id }} | Location {{ dogPlace.location.lat }}, {{ dogPlace.location.lat }}</small>
+    <small>Id: {{ dogPlace.id }} | Location {{ dogPlace.location.lat }}, {{ dogPlace.location.lng }}</small>
 
     <div>
       <p>Type: {{ dogPlace.terrain }}</p>
