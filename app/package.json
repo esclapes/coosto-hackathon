@@ -5,8 +5,10 @@
   "author": " <>",
   "private": true,
   "dependencies": {
+    "apollo-client": "^0.5.26",
     "axios": "^0.15.3",
-    "nuxt": "latest"
+    "nuxt": "latest",
+    "vue-apollo": "^1.4.1"
   },
   "scripts": {
     "dev": "nuxt",
