@@ -1,3 +1,4 @@
+import 'isomorphic-fetch'
 import ApolloClient, { createNetworkInterface } from 'apollo-client'
 
 const networkInterface = createNetworkInterface({
