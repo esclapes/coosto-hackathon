@@ -7,6 +7,15 @@
       <p>Type: {{ dogPlace.terrain }}</p>
       <img :src="dogPlace.image" :alt="dogPlace.name">
     </div>
+
+    <gmap-street-view-panorama
+      class="pano"
+      :position="{ lat: dogPlace.location.lat, lng: dogPlace.location.lng }"
+      :pov="{heading: 0, pitch: 10}"
+      :zoom="1"
+      @pano_changed="updatePano"
+      @pov_changed="updatePov">
+    </gmap-street-view-panorama>
   </article>
 </template>
 
@@ -38,6 +47,16 @@ export default {
       .catch(error => {
         console.warn(error)
       })
+  },
+
+  methods: {
+    updatePov (pov) {
+      this.pov = pov
+    },
+
+    updatePano (pano) {
+      this.pano = pano
+    }
   }
 }
 </script>
@@ -48,5 +67,10 @@ h1 {
 }
 .location-id {
   margin-bottom: 2em;
+}
+
+.pano {
+  width: 100%;
+  height: 300px;
 }
 </style>
