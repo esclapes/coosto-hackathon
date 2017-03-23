@@ -11,6 +11,7 @@ This is a hackaton project made for the 2nd Coosto Hackaton, in order to try out
 - `git clone https://github.com/esclapes/coosto-hackathon.git && cd coosto-hackaton`
 - `cd api && npm install && npm start`
 - In another terminal/tab: `cd app && npm install && npm run dev`
+- Open http://localhost:3000 in your browser
 
 # Credits
 
