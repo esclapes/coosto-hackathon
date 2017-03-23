@@ -12,6 +12,7 @@ This is a hackaton project made for the 2nd Coosto Hackaton, in order to try out
 - `cd api && npm install && npm start`
 - In another terminal/tab: `cd app && npm install && npm run dev`
 - Open http://localhost:3000 in your browser
+- Open http://localhost:3002/graphiql to play around the GraphQL API
 
 # Credits
 
