@@ -1,3 +1,4 @@
+const nodeExternals = require('webpack-node-externals')
 module.exports = {
   /*
   ** Headers of the page
@@ -39,6 +40,10 @@ module.exports = {
           loader: 'eslint-loader',
           exclude: /(node_modules)/
         })
+      } else {
+        config.externals = [ nodeExternals({
+          whitelist: ['vue2-google-maps']
+        })]
       }
     }
   },
