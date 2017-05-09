@@ -64,27 +64,12 @@
 
 <script>
 import apollo from '../../lib/apollo'
+import { mapDefaults } from '~/lib/const'
 import gql from 'graphql-tag'
 
 export default {
-  data ({ params }) {
-    const mapDefaults = {
-      infoWindowLocation: {},
-      infoWindowPos: {
-        lat: 0,
-        lng: 0
-      },
-      infoWinOpen: false,
-      currentMidx: null,
-      infoOptions: {
-        pixelOffset: {
-          width: 0,
-          height: -35
-        }
-      }
-    }
-
-    return apollo.query({
+  async asyncData ({ params }) {
+    const { data } = await apollo.query({
       query: gql`{
         dogPlace(id:"${params.id}") {
           id,
@@ -100,19 +85,15 @@ export default {
             }
           }
         }
-      }`})
-    .then(({ data }) => {
-      return Object.assign({}, {
-        ...mapDefaults,
-        nearbyType: '',
-        shouldRender: false
-      }, {
-        dogPlace: data.dogPlace
-      })
+      }`
     })
-    .catch(error => {
-      console.warn(error)
-    })
+
+    return {
+      ...mapDefaults,
+      nearbyType: '',
+      shouldRender: false,
+      dogPlace: data.dogPlace
+    }
   },
 
   computed: {

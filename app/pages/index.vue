@@ -33,42 +33,26 @@
 
 <script>
 import apollo from '../lib/apollo'
+import { mapDefaults } from '~/lib/const'
 import gql from 'graphql-tag'
 
 export default {
-  data () {
-    const mapDefaults = {
-      infoWindowLocation: {},
-      infoWindowPos: {
-        lat: 0,
-        lng: 0
-      },
-      infoWinOpen: false,
-      currentMidx: null,
-      infoOptions: {
-        pixelOffset: {
-          width: 0,
-          height: -35
-        }
-      }
-    }
-
-    return apollo.query({
+  async asyncData () {
+    const { data } = await apollo.query({
       query: gql`{
         dogPlaces {
           id, name, location { lat, lng }
         }
       }`
-    }).then(({ data }) => {
-      return Object.assign({}, {
-        ...mapDefaults,
-        shouldRender: false
-      }, {
-        // records: res.data.records,
-        center: { lat: 51.4416, lng: 5.4697 },
-        places: data.dogPlaces
-      })
     })
+
+    return {
+      ...mapDefaults,
+      shouldRender: false,
+      // records: res.data.records,
+      center: { lat: 51.4416, lng: 5.4697 },
+      places: data.dogPlaces
+    }
   },
 
   computed: {
