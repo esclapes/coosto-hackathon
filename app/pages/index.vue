@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import apollo from '../lib/apollo'
+import apollo from '~/lib/apollo'
 import { mapDefaults } from '~/lib/const'
 import gql from 'graphql-tag'
 

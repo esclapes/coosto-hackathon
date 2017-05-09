@@ -1,5 +1,8 @@
 const nodeExternals = require('webpack-node-externals')
+const { resolve } = require('path')
+
 module.exports = {
+  srcDir: resolve('./src'),
   /*
   ** Headers of the page
   */
